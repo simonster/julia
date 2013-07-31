@@ -33,7 +33,7 @@ namespace JL_I {
         checked_smul, checked_umul,
         nan_dom_err,
         // functions
-        abs_float, copysign_float, flipsign_int,
+        abs_float, copysign_float, sqrt_float, flipsign_int,
         // pointer access
         pointerref, pointerset, pointertoref,
         // c interface
@@ -1004,6 +1004,14 @@ static Value *emit_intrinsic(intrinsic f, jl_value_t **args, size_t nargs,
                                                                 signbit0)));
         return builder.CreateBitCast(rbits, x->getType());
     }
+    HANDLE(sqrt_float,1) {
+        x = FP(x);
+        raise_exception_unless(builder.CreateFCmpUGE(x,ConstantFP::get(FT(t),  0.)),
+                               jldomerr_var, ctx);
+        return builder.CreateCall(
+            Intrinsic::getDeclaration(jl_Module, Intrinsic::sqrt,
+                                      ArrayRef<Type*>(x->getType())), x);
+    }
     HANDLE(flipsign_int,2)
     {
         x = JL_INT(x);
@@ -1103,7 +1111,7 @@ extern "C" void jl_init_intrinsic_functions(void)
     ADD_I(fpsiround); ADD_I(fpuiround);
     ADD_I(uitofp); ADD_I(sitofp);
     ADD_I(fptrunc); ADD_I(fpext);
-    ADD_I(abs_float); ADD_I(copysign_float);
+    ADD_I(abs_float); ADD_I(copysign_float); ADD_I(sqrt_float);
     ADD_I(flipsign_int);
     ADD_I(pointerref); ADD_I(pointerset); ADD_I(pointertoref);
     ADD_I(checked_sadd); ADD_I(checked_uadd);

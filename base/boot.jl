@@ -154,7 +154,7 @@ export
     #fptrunc32, le_float, lefsi64, lefui64, lesif64,
     #leuif64, lshr_int, lt_float, ltfsi64, ltfui64, ltsif64, ltuif64, mul_float,
     #mul_int, ne_float, ne_int, neg_float, neg_int, not_int, or_int, rem_float,
-    #sdiv_int, shl_int, sitofp, sle_int, slt_int, smod_int,
+    #sdiv_int, shl_int, sitofp, sle_int, slt_int, smod_int, sqrt_float,
     #srem_int, sub_float, sub_int, trunc_int, udiv_int, uitofp,
     #ule_int, ult_int, unbox, urem_int, xor_int, sext_int, zext_int
 

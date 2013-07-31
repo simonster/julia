@@ -113,7 +113,7 @@ exp10(x::Integer) = exp10(float(x))
 
 # functions that return NaN on non-NaN argument for domain error
 for f in (:sin, :cos, :tan, :asin, :acos, :acosh, :atanh, :log, :log2, :log10,
-          :lgamma, :sqrt, :log1p)
+          :lgamma, :log1p)
     @eval begin
         ($f)(x::Float64) = nan_dom_err(ccall(($(string(f)),libm), Float64, (Float64,), x), x)
         ($f)(x::Float32) = nan_dom_err(ccall(($(string(f,"f")),libm), Float32, (Float32,), x), x)
@@ -137,6 +137,9 @@ floor(x::Float32) = ccall((:floorf, libm), Float32, (Float32,), x)
 @vectorize_1arg Real floor
 
 atan2(x::Real, y::Real) = atan2(float(x), float(y))
+
+sqrt(x::Real) = sqrt(float(x))
+@vectorize_1arg Number sqrt
 
 hypot(x::Float32, y::Float64) = hypot(float64(x), y)
 hypot(x::Float64, y::Float32) = hypot(x, float64(y))

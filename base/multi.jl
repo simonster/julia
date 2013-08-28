@@ -290,20 +290,13 @@ function worker_from_id(pg::ProcessGroup, i)
     map_pid_wrkr[i]
 end
 
-function worker_id_from_socket(s)
+function worker_id_from_socket(s::Socket)
     w = get(map_sock_wrkr, s, nothing)
-    if isa(w,Worker)
-        if is(s, w.socket) || is(s, w.sendbuf)
-            return w.id
-        end
-    end
-    if isa(s,IOStream) && fd(s)==-1
-        # serializing to a local buffer
-        return myid()
-    end
-    return -1
+    isa(w,Worker) && (is(s, w.socket) || is(s, w.sendbuf)) ? w.id : -1
 end
-
+# serializing to a local buffer
+worker_id_from_socket(s::IOStream) = fd(s)==-1 ? myid() : -1
+worker_id_from_socket(s::IO) = -1
 
 register_worker(w) = register_worker(PGRP, w)
 function register_worker(pg, w)
